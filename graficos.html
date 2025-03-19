@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficos de Envíos y Retiros de Dinero</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .chart-box {
+            width: 45%;
+            min-width: 400px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        @media (max-width: 900px) {
+            .chart-box {
+                width: 100%;
+            }
+        }
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #444;
+        }
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            padding: 8px 15px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+        .summary-box {
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            width: 200px;
+        }
+        .envios {
+            background-color: rgba(54, 162, 235, 0.2);
+            border: 1px solid rgba(54, 162, 235, 0.5);
+        }
+        .retiros {
+            background-color: rgba(255, 99, 132, 0.2);
+            border: 1px solid rgba(255, 99, 132, 0.5);
+        }
+        .balance {
+            background-color: rgba(75, 192, 192, 0.2);
+            border: 1px solid rgba(75, 192, 192, 0.5);
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Análisis de Envíos y Retiros de Dinero</h1>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-period="month">Mensual</button>
+            <button class="filter-btn" data-period="quarter">Trimestral</button>
+            <button class="filter-btn" data-period="year">Anual</button>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-box envios">
+                <h3>Total Envíos</h3>
+                <p id="total-envios">$45,750.00</p>
+            </div>
+            <div class="summary-box retiros">
+                <h3>Total Retiros</h3>
+                <p id="total-retiros">$38,200.00</p>
+            </div>
+            <div class="summary-box balance">
+                <h3>Balance</h3>
+                <p id="balance">$7,550.00</p>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-box">
+                <h2 class="chart-title">Envíos vs Retiros por Período</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h2 class="chart-title">Tendencia de Transacciones</h2>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-box">
+                <h2 class="chart-title">Distribución de Envíos</h2>
+                <canvas id="pieChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h2 class="chart-title">Volumen de Transacciones</h2>
+                <canvas id="areaChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ejemplo
+        const dataMensual = {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+            envios: [4500, 5200, 3800, 6100, 7200, 8950],
+            retiros: [3200, 4100, 2900, 5500, 6700, 7800],
+            enviosPorTipo: {
+                labels: ['Transferencia', 'Efectivo', 'Giro', 'Otros'],
+                data: [45, 25, 20, 10]
+            }
+        };
+
+        const dataTrimestral = {
+            labels: ['Trim 1', 'Trim 2', 'Trim 3', 'Trim 4'],
+            envios: [13500, 22250, 32000, 27500],
+            retiros: [10200, 19500, 28700, 24100],
+            enviosPorTipo: {
+                labels: ['Transferencia', 'Efectivo', 'Giro', 'Otros'],
+                data: [50, 30, 15, 5]
+            }
+        };
+
+        const dataAnual = {
+            labels: ['2021', '2022', '2023', '2024'],
+            envios: [95000, 120000, 145000, 185000],
+            retiros: [85000, 110000, 135000, 170000],
+            enviosPorTipo: {
+                labels: ['Transferencia', 'Efectivo', 'Giro', 'Otros'],
+                data: [60, 20, 15, 5]
+            }
+        };
+
+        // Configuración de colores
+        const colors = {
+            envios: {
+                border: 'rgba(54, 162, 235, 1)',
+                background: 'rgba(54, 162, 235, 0.2)'
+            },
+            retiros: {
+                border: 'rgba(255, 99, 132, 1)',
+                background: 'rgba(255, 99, 132, 0.2)'
+            },
+            pie: [
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ]
+        };
+
+        // Inicializar gráficos
+        let barChart, lineChart, pieChart, areaChart;
+        let currentPeriod = 'month';
+        let currentData = dataMensual;
+
+        function initCharts() {
+            // Gráfico de barras
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: currentData.labels,
+                    datasets: [
+                        {
+                            label: 'Envíos',
+                            data: currentData.envios,
+                            backgroundColor: colors.envios.background,
+                            borderColor: colors.envios.border,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Retiros',
+                            data: currentData.retiros,
+                            backgroundColor: colors.retiros.background,
+                            borderColor: colors.retiros.border,
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Monto ($)'
+                            }
+                        }
+                    },
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += new Intl.NumberFormat('es-ES', {
+                                        style: 'currency',
+                                        currency: 'USD'
+                                    }).format(context.parsed.y);
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de línea
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            lineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: currentData.labels,
+                    datasets: [
+                        {
+                            label: 'Envíos',
+                            data: currentData.envios,
+                            borderColor: colors.envios.border,
+                            backgroundColor: colors.envios.background,
+                            tension: 0.4,
+                            fill: false
+                        },
+                        {
+                            label: 'Retiros',
+                            data: currentData.retiros,
+                            borderColor: colors.retiros.border,
+                            backgroundColor: colors.retiros.background,
+                            tension: 0.4,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += new Intl.NumberFormat('es-ES', {
+                                        style: 'currency',
+                                        currency: 'USD'
+                                    }).format(context.parsed.y);
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Monto ($)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de área
+            const areaCtx = document.getElementById('areaChart').getContext('2d');
+            areaChart = new Chart(areaCtx, {
+                type: 'line',
+                data: {
+                    labels: currentData.labels,
+                    datasets: [
+                        {
+                            label: 'Envíos',
+                            data: currentData.envios,
+                            borderColor: colors.envios.border,
+                            backgroundColor: colors.envios.background,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Retiros',
+                            data: currentData.retiros,
+                            borderColor: colors.retiros.border,
+                            backgroundColor: colors.retiros.background,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de pastel
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: currentData.enviosPorTipo.labels,
+                    datasets: [{
+                        data: currentData.enviosPorTipo.data,
+                        backgroundColor: colors.pie,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    return `${label}: ${value}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts(period) {
+            currentPeriod = period;
+            
+            switch(period) {
+                case 'month':
+                    currentData = dataMensual;
+                    document.getElementById('total-envios').textContent = '$45,750.00';
+                    document.getElementById('total-retiros').textContent = '$38,200.00';
+                    document.getElementById('balance').textContent = '$7,550.00';
+                    break;
+                case 'quarter':
+                    currentData = dataTrimestral;
+                    document.getElementById('total-envios').textContent = '$95,250.00';
+                    document.getElementById('total-retiros').textContent = '$82,500.00';
+                    document.getElementById('balance').textContent = '$12,750.00';
+                    break;
+                case 'year':
+                    currentData = dataAnual;
+                    document.getElementById('total-envios').textContent = '$545,000.00';
+                    document.getElementById('total-retiros').textContent = '$500,000.00';
+                    document.getElementById('balance').textContent = '$45,000.00';
+                    break;
+            }
+            
+            // Actualizar datos en los gráficos
+            barChart.data.labels = currentData.labels;
+            barChart.data.datasets[0].data = currentData.envios;
+            barChart.data.datasets[1].data = currentData.retiros;
+            barChart.update();
+            
+            lineChart.data.labels = currentData.labels;
+            lineChart.data.datasets[0].data = currentData.envios;
+            lineChart.data.datasets[1].data = currentData.retiros;
+            lineChart.update();
+            
+            areaChart.data.labels = currentData.labels;
+            areaChart.data.datasets[0].data = currentData.envios;
+            areaChart.data.datasets[1].data = currentData.retiros;
+            areaChart.update();
+            
+            pieChart.data.labels = currentData.enviosPorTipo.labels;
+            pieChart.data.datasets[0].data = currentData.enviosPorTipo.data;
+            pieChart.update();
+        }
+
+        // Inicializar los gráficos cuando carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            
+            // Manejar cambios de período
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    updateCharts(this.dataset.period);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

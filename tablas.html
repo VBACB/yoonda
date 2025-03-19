@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablas de Envíos y Retiros de Dinero</title>
+    <style>
+        body {
+            background-color: #0000003a;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        tr:hover {
+            background-color: #e6f7ff;
+        }
+        
+        .status-completado {
+            color: green;
+            font-weight: bold;
+        }
+        
+        .status-pendiente {
+            color: orange;
+            font-weight: bold;
+        }
+        
+        .status-cancelado {
+            color: red;
+            font-weight: bold;
+        }
+        
+        .monto {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .fecha {
+            white-space: nowrap;
+        }
+        
+        .acciones {
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 0 3px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YOONDA</h1>
+        
+        <h2>Registro de Envíos de Dinero</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Remitente</th>
+                    <th>Destinatario</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ENV-001</td>
+                    <td class="fecha">15/03/2025</td>
+                    <td>Carlos Rodríguez</td>
+                    <td>María López</td>
+                    <td class="monto">$1,250.00</td>
+                    <td><span class="status-completado">Completado</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>ENV-002</td>
+                    <td class="fecha">16/03/2025</td>
+                    <td>Ana Martínez</td>
+                    <td>Pedro Gómez</td>
+                    <td class="monto">$850.50</td>
+                    <td><span class="status-pendiente">Pendiente</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                        <a href="#" class="btn btn-danger">Cancelar</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>ENV-003</td>
+                    <td class="fecha">17/03/2025</td>
+                    <td>Juan Pérez</td>
+                    <td>Laura Torres</td>
+                    <td class="monto">$2,500.00</td>
+                    <td><span class="status-completado">Completado</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>ENV-004</td>
+                    <td class="fecha">18/03/2025</td>
+                    <td>Sofía Ramírez</td>
+                    <td>Daniel García</td>
+                    <td class="monto">$1,000.00</td>
+                    <td><span class="status-pendiente">Pendiente</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                        <a href="#" class="btn btn-danger">Cancelar</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>ENV-005</td>
+                    <td class="fecha">19/03/2025</td>
+                    <td>Roberto Fernández</td>
+                    <td>Cristina Sánchez</td>
+                    <td class="monto">$3,750.25</td>
+                    <td><span class="status-cancelado">Cancelado</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>Registro de Retiros de Dinero</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Método</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>RET-001</td>
+                    <td class="fecha">14/03/2025</td>
+                    <td>María López</td>
+                    <td>Transferencia bancaria</td>
+                    <td class="monto">$1,000.00</td>
+                    <td><span class="status-completado">Completado</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RET-002</td>
+                    <td class="fecha">16/03/2025</td>
+                    <td>Pedro Gómez</td>
+                    <td>Efectivo</td>
+                    <td class="monto">$500.00</td>
+                    <td><span class="status-completado">Completado</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RET-003</td>
+                    <td class="fecha">17/03/2025</td>
+                    <td>Laura Torres</td>
+                    <td>Transferencia bancaria</td>
+                    <td class="monto">$1,500.00</td>
+                    <td><span class="status-pendiente">Pendiente</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                        <a href="#" class="btn btn-danger">Cancelar</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RET-004</td>
+                    <td class="fecha">18/03/2025</td>
+                    <td>Daniel García</td>
+                    <td>Efectivo</td>
+                    <td class="monto">$750.00</td>
+                    <td><span class="status-pendiente">Pendiente</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                        <a href="#" class="btn btn-danger">Cancelar</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>RET-005</td>
+                    <td class="fecha">19/03/2025</td>
+                    <td>Cristina Sánchez</td>
+                    <td>Transferencia bancaria</td>
+                    <td class="monto">$2,000.00</td>
+                    <td><span class="status-cancelado">Cancelado</span></td>
+                    <td class="acciones">
+                        <a href="#" class="btn btn-info">Detalles</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Transacciones Financieras</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        /* Sección de transacciones */
+        .transactions {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .transaction-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: calc(50% - 10px);
+        }
+        
+        .transaction-title {
+            color: #0056b3;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* Formularios */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #003d82;
+        }
+        
+        /* Historial de transacciones */
+        .history {
+            margin-top: 40px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .status-complete {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .transaction-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sistema de Transacciones Financieras</h1>
+            <p>Gestione sus envíos y retiros de dinero de forma segura</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="transactions">
+            <!-- Formulario de Envío de Dinero -->
+            <div class="transaction-card">
+                <h2 class="transaction-title">Enviar Dinero</h2>
+                <form id="send-money-form">
+                    <div class="form-group">
+                        <label for="sender">Su Cuenta</label>
+                        <input type="text" id="sender" placeholder="Número de cuenta" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recipient">Destinatario</label>
+                        <input type="text" id="recipient" placeholder="Número de cuenta del destinatario" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="send-amount">Monto a Enviar</label>
+                        <input type="number" id="send-amount" placeholder="0.00" min="1" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="send-currency">Moneda</label>
+                        <select id="send-currency" required>
+                            <option value="USD">USD - Dólar Estadounidense</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="MXN">MXN - Peso Mexicano</option>
+                            <option value="COP">COP - Peso Colombiano</option>
+                            <option value="ARS">ARS - Peso Argentino</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="send-description">Descripción (Opcional)</label>
+                        <input type="text" id="send-description" placeholder="Concepto de la transferencia">
+                    </div>
+                    
+                    <button type="submit">Enviar Dinero</button>
+                </form>
+            </div>
+            
+            <!-- Formulario de Retiro de Dinero -->
+            <div class="transaction-card">
+                <h2 class="transaction-title">Retirar Dinero</h2>
+                <form id="withdraw-money-form">
+                    <div class="form-group">
+                        <label for="account">Cuenta de Origen</label>
+                        <input type="text" id="account" placeholder="Número de cuenta" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="withdraw-method">Método de Retiro</label>
+                        <select id="withdraw-method" required>
+                            <option value="bank_transfer">Transferencia Bancaria</option>
+                            <option value="debit_card">Tarjeta de Débito</option>
+                            <option value="cash_pickup">Recoger en Efectivo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="withdraw-amount">Monto a Retirar</label>
+                        <input type="number" id="withdraw-amount" placeholder="0.00" min="1" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="withdraw-currency">Moneda</label>
+                        <select id="withdraw-currency" required>
+                            <option value="USD">USD - Dólar Estadounidense</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="MXN">MXN - Peso Mexicano</option>
+                            <option value="COP">COP - Peso Colombiano</option>
+                            <option value="ARS">ARS - Peso Argentino</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit">Solicitar Retiro</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Historial de Transacciones -->
+        <div class="history">
+            <h2 class="transaction-title">Historial de Transacciones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Destino/Origen</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>19/03/2025</td>
+                        <td>Envío</td>
+                        <td>Juan Pérez</td>
+                        <td>$500.00 USD</td>
+                        <td><span class="status status-complete">Completado</span></td>
+                    </tr>
+                    <tr>
+                        <td>17/03/2025</td>
+                        <td>Retiro</td>
+                        <td>Transferencia Bancaria</td>
+                        <td>$1,200.00 USD</td>
+                        <td><span class="status status-pending">Pendiente</span></td>
+                    </tr>
+                    <tr>
+                        <td>15/03/2025</td>
+                        <td>Envío</td>
+                        <td>María González</td>
+                        <td>$350.00 USD</td>
+                        <td><span class="status status-complete">Completado</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        // Funcionalidad para el formulario de envío
+        document.getElementById('send-money-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Transacción de envío iniciada. Se procesará en breve.');
+            this.reset();
+        });
+        
+        // Funcionalidad para el formulario de retiro
+        document.getElementById('withdraw-money-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Solicitud de retiro recibida. Se procesará en breve.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

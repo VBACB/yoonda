@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transferencia de Dinero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: #5b21b6;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .accounts {
+            padding: 20px 30px;
+            background-color: #f8f9fa;
+        }
+        
+        .account {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .account:hover {
+            transform: translateY(-3px);
+        }
+        
+        .account-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #e9eaf6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 18px;
+            color: #5b21b6;
+        }
+        
+        .account-info {
+            flex-grow: 1;
+        }
+        
+        .account-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .account-number {
+            font-size: 13px;
+            color: #777;
+            margin-top: 3px;
+        }
+        
+        .account-balance {
+            font-size: 16px;
+            font-weight: 600;
+            color: #5b21b6;
+        }
+        
+        .form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #5b21b6;
+        }
+        
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L2 5h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 12px;
+        }
+        
+        .button {
+            background-color: #5b21b6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .button:hover {
+            background-color: #4c1d95;
+        }
+        
+        .recent-transfers {
+            padding: 20px 30px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .recent-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .transfer-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #efefef;
+        }
+        
+        .transfer-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9eaf6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 16px;
+            color: #5b21b6;
+        }
+        
+        .transfer-info {
+            flex-grow: 1;
+        }
+        
+        .transfer-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .transfer-date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .transfer-amount {
+            font-size: 15px;
+            font-weight: 600;
+            color: #5b21b6;
+        }
+        
+        .transfer-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+        
+        .status-completed {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-pending {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+        
+        .arrow-icon {
+            margin: 0 8px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>YOONDA</h1>
+            <p>Envía dinero de forma rápida y segura</p>
+        </div>
+        
+        <div class="accounts">
+            <div class="account">
+                <div class="account-icon">💰</div>
+                <div class="account-info">
+                    <div class="account-name">Cuenta de Ahorros</div>
+                    <div class="account-number">**** **** **** 4590</div>
+                </div>
+                <div class="account-balance">€2,450.75</div>
+            </div>
+            
+            <div class="account">
+                <div class="account-icon">💳</div>
+                <div class="account-info">
+                    <div class="account-name">Cuenta Corriente</div>
+                    <div class="account-number">**** **** **** 1234</div>
+                </div>
+                <div class="account-balance">€1,250.30</div>
+            </div>
+        </div>
+        
+        <div class="form">
+            <div class="form-group">
+                <label class="form-label">Selecciona una cuenta de origen</label>
+                <select class="form-input form-select">
+                    <option>Cuenta de Ahorros (**** 4590)</option>
+                    <option>Cuenta Corriente (**** 1234)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Selecciona una cuenta de destino</label>
+                <select class="form-input form-select">
+                    <option>Cuenta Corriente (**** 1234)</option>
+                    <option>Cuenta de Ahorros (**** 4590)</option>
+                    <option>Añadir nueva cuenta</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Monto a transferir</label>
+                <input type="text" class="form-input" placeholder="€0.00">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Concepto</label>
+                <input type="text" class="form-input" placeholder="Ingresa un concepto">
+            </div>
+            
+            <button class="button">Realizar Transferencia</button>
+        </div>
+        
+        <div class="recent-transfers">
+            <h2 class="recent-title">Transferencias Recientes</h2>
+            
+            <div class="transfer-item">
+                <div class="transfer-icon">📤</div>
+                <div class="transfer-info">
+                    <div class="transfer-name">Transferencia a María López</div>
+                    <div class="transfer-date">17 de Marzo, 2025</div>
+                </div>
+                <div class="transfer-amount">€150.00</div>
+                <div class="transfer-status status-completed">Completada</div>
+            </div>
+            
+            <div class="transfer-item">
+                <div class="transfer-icon">📥</div>
+                <div class="transfer-info">
+                    <div class="transfer-name">Transferencia de Juan Pérez</div>
+                    <div class="transfer-date">15 de Marzo, 2025</div>
+                </div>
+                <div class="transfer-amount">€75.00</div>
+                <div class="transfer-status status-completed">Completada</div>
+            </div>
+            
+            <div class="transfer-item">
+                <div class="transfer-icon">📤</div>
+                <div class="transfer-info">
+                    <div class="transfer-name">Transferencia a Carlos García</div>
+                    <div class="transfer-date">12 de Marzo, 2025</div>
+                </div>
+                <div class="transfer-amount">€200.00</div>
+                <div class="transfer-status status-pending">Pendiente</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
